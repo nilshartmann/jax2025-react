@@ -14,8 +14,11 @@ if (rootElement === null) {
 
 const queryClient = createQueryClient();
 
+const App = <ActivityDemo />;
+// const App = <ViewTransitionDemo />;
+
 createRoot(rootElement).render(
   <QueryClientProvider client={queryClient}>
-    <ActivityDemo />
+    <div className={"container mx-auto"}>{App}</div>
   </QueryClientProvider>,
 );

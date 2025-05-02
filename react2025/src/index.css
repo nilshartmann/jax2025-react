@@ -27,6 +27,7 @@
     border-color: var(--color-gray-200, currentcolor);
   }
 }
+
 @layer components {
   h1 {
     @apply text-2xl font-bold;
@@ -44,10 +45,13 @@
     @apply inline-flex cursor-pointer self-center rounded-lg border-0 bg-amber-500 px-2 py-1 text-stone-100 hover:bg-amber-600;
   }
 
+  .active {
+    @apply bg-sky-500 font-bold text-sky-900 underline;
+  }
+
   /*form {*/
   /*  @apply flex flex-col gap-y-8 p-4;*/
   /*}*/
-
   form > button[type="submit"],
   .SubmitButton {
     @apply self-start px-8 py-2 text-xl;
@@ -82,6 +86,7 @@
   .TwoColumnLayout > :nth-child(1) {
     @apply pt-4;
   }
+
   .TwoColumnLayout > :nth-child(2) {
     @apply border-l border-gray-200 p-4;
   }
@@ -185,4 +190,30 @@
     -webkit-transform: scale(1);
     transform: scale(1);
   }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+::view-transition-old(*) {
+  animation: 1200ms ease-out fade-out;
+}
+
+::view-transition-new(*) {
+  animation: 1200ms ease-in fade-in;
 }
