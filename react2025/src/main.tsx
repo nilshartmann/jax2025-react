@@ -1,8 +1,10 @@
 import "./index.css";
 
+import { QueryClientProvider } from "@tanstack/react-query";
 import { createRoot } from "react-dom/client";
 
-import App from "./App.tsx";
+import ActivityDemo from "./ActivityDemo.tsx";
+import { createQueryClient } from "./create-query-client.ts";
 
 const rootElement = document.getElementById("root");
 
@@ -10,4 +12,10 @@ if (rootElement === null) {
   throw new Error("Cannot find the root element");
 }
 
-createRoot(rootElement).render(<App />);
+const queryClient = createQueryClient();
+
+createRoot(rootElement).render(
+  <QueryClientProvider client={queryClient}>
+    <ActivityDemo />
+  </QueryClientProvider>,
+);
