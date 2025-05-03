@@ -7,10 +7,7 @@ export const Route = createFileRoute("/editor/")({
 
 function RouteComponent() {
   return (
-    <div className={"container mx-auto"}>
-      <div className={"mt-4 mb-8 flex justify-center"}>
-        <h1>Create your personal greeeting card</h1>
-      </div>
+    <div className={"container mx-auto mt-4 mb-8 flex justify-center"}>
       <CardEditor />
     </div>
   );

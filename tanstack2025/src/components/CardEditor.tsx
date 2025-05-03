@@ -1,7 +1,6 @@
 import ky from "ky";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
 import { CardDto } from "@/types";
 import ImageChooser from "@/components/ImageChooser";
 import Card from "@/components/Card";
@@ -48,53 +47,46 @@ export default function CardEditor({ onAfterSave }: CardEditorProps) {
   };
 
   return (
-    <div className={"CardEditor"}>
-      <form>
-        <label>
-          Title
-          <input value={title} onChange={(e) => setTitle(e.target.value)} />
-        </label>
-        {title.length < 4 && (
-          <p>Please enter a longer title. Current length: {title.length}</p>
-        )}
-        <label>
-          Message
-          <input value={message} onChange={(e) => setMessage(e.target.value)} />
-        </label>
+    <form className={"w-full"}>
+      <h1>Create your personal greeeting card</h1>
+      <label>
+        Title
+        <input value={title} onChange={(e) => setTitle(e.target.value)} />
+      </label>
+      {title.length < 4 && (
+        <p>Please enter a longer title. Current length: {title.length}</p>
+      )}
+      <label>
+        Message
+        <input value={message} onChange={(e) => setMessage(e.target.value)} />
+      </label>
 
-        <label>Image</label>
-        <ImageChooser
-          selectedImage={selectedImage}
-          onSelectedImageChange={handleImageSelected}
-        />
+      <label>Image</label>
+      <ImageChooser
+        selectedImage={selectedImage}
+        onSelectedImageChange={handleImageSelected}
+      />
 
-        <button
-          disabled={
-            title.length === 0 || message.length === 0 || selectedImage === null
-          }
-          onClick={handleSaveClick}
-          type={"button"}
-        >
-          Save
-        </button>
-        {saveCardMutation.isSuccess && (
-          <p className={"flex justify-center gap-x-8 text-green-600"}>
-            <span className={"font-bold"}>New card saved!</span>
-            <Link to={"/cards"}>
-              <span className={"font-bold text-green-600"}>Home</span>
-            </Link>
-          </p>
-        )}
-        {saveCardMutation.isError && (
-          <p className={"text-rose-600"}>Card could not be created</p>
-        )}
-      </form>
-
-      {/*<Card*/}
-      {/*  title={title}*/}
-      {/*  message={message}*/}
-      {/*  image={selectedImage || "placeholder.png"}*/}
-      {/*/>*/}
-    </div>
+      <button
+        disabled={
+          title.length === 0 || message.length === 0 || selectedImage === null
+        }
+        onClick={handleSaveClick}
+        type={"button"}
+      >
+        Save
+      </button>
+      {saveCardMutation.isSuccess && (
+        <p className={"flex justify-center gap-x-8 text-green-600"}>
+          <span className={"font-bold"}>New card saved!</span>
+          {/*<Link to={"/cards"}>*/}
+          {/*  <span className={"font-bold text-green-600"}>Home</span>*/}
+          {/*</Link>*/}
+        </p>
+      )}
+      {saveCardMutation.isError && (
+        <p className={"text-rose-600"}>Card could not be created</p>
+      )}
+    </form>
   );
 }
