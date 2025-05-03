@@ -1,6 +1,6 @@
 "use client";
-import { LikeIcon, LikeIndicator } from "@/components/LoadingIndicator";
 import { useFormStatus } from "react-dom";
+import { LikeIcon, LikeIndicator } from "@/components/LoadingIndicator";
 
 export default function LikeButton({ currentLikes }: { currentLikes: number }) {
   const { pending } = useFormStatus();

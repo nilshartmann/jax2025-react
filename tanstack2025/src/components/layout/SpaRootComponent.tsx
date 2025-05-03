@@ -11,14 +11,6 @@ export default function SpaRootComponent() {
           <NavBar />
         </header>
         <Outlet />
-        {/*
-           DEMO
-           - NICHT VERLANGSAMEN!!!!
-
-           - Navigation => Query Cache füllt sich
-           -            => keine Requests mehr
-
-           */}
         <ReactQueryDevtools />
       </>
     </>

@@ -1,5 +1,3 @@
-import { LikeIcon, LikeIndicator } from "@/components/LoadingIndicator";
-import { saveLike } from "@/queries";
 import LikeButton from "@/components/LikeButton";
 
 type LikesWidgetProps = {
@@ -8,11 +6,9 @@ type LikesWidgetProps = {
 };
 
 export function LikesWidget({ cardId, currentLikes }: LikesWidgetProps) {
-  async function handleSave() {
-    "use server";
-
-    await saveLike(cardId);
-  }
+  const handleSave = () => {
+    // todo
+  };
 
   return (
     <form className={"inline-block"} action={handleSave}>

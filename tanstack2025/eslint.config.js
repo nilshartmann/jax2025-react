@@ -29,6 +29,7 @@ export default [
       "eslint.config.js",
       "src/routeTree.gen.ts",
       "vite.config.js",
+      "public/hover-link.js",
     ],
   },
 ];
