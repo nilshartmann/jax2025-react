@@ -1,10 +1,27 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import {
   Suspense,
   unstable_Activity as Activity,
   useEffect,
   useState,
 } from "react";
+
+// prevent Activity from beeing removed from imports when not used
+const x = Activity;
+
+// DEMO:
+
+//  - ohne Activity rendern:
+//    - initial: keine Daten werden geladen
+//    - Komponentenwechsel: Daten werden geladen. State geht verloren.
+//  - auf Activity umstellen:
+//    - initial: Daten werden vorgeladen
+//      - Lade dauer sehr langsam machen und hin- und her klicken
+//        - REquest läuft weiter
+//      - State in A bleibt erhalten
+//    - globalen Counter ändern:
+//      - visible Component wird gerendert + committed (effect)
+//      - hidden component wird nur gerendert (kein Effect)
 
 type TabName = "A" | "B";
 export default function ActivityDemo() {
@@ -16,6 +33,8 @@ export default function ActivityDemo() {
 
   const btnClassName = (tab: string) =>
     activeTab === tab ? "active" : undefined;
+
+  const queryClient = useQueryClient();
 
   return (
     <div className={"container mx-auto flex flex-col space-y-8"}>
@@ -39,6 +58,7 @@ export default function ActivityDemo() {
       </Activity>
 
       <Suspense fallback={<LoadingFallback />}>
+        {/*{activeTab === "B" && <B />}*/}
         <Activity mode={activeTab === "B" ? "visible" : "hidden"}>
           <B />
         </Activity>
@@ -103,7 +123,18 @@ function B() {
     };
   });
 
-  useDemoSuspenseQuery(["B", counterB]);
+  const { data } = useSuspenseQuery({
+    queryKey: ["B"],
+    queryFn(): Promise<string> {
+      console.log("Fetching Data in Suspense Query");
+      return new Promise((res) => {
+        setTimeout(() => {
+          console.log("Data Fetched in Suspense Query");
+          res(`This is dummy data loaded with suspense`);
+        }, 4200);
+      });
+    },
+  });
 
   return (
     <div
@@ -112,21 +143,10 @@ function B() {
       }
     >
       <div className={"font-bold"}>Component B</div>
+      <div>{data}</div>
       <button id="buttonB" onClick={() => setCounterB(counterB + 1)}>
         Local Couter in B: {counterB}
       </button>
     </div>
   );
-}
-
-function useDemoSuspenseQuery(keys: Array<string | number>, duration = 5000) {
-  return useSuspenseQuery({
-    queryKey: [keys],
-    queryFn() {
-      console.log("Simulating Suspense Query with keys  ", keys);
-      return new Promise((res) => {
-        setTimeout(() => res("huhu"), duration);
-      });
-    },
-  });
 }

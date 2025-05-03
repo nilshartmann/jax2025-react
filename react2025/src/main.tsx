@@ -1,6 +1,7 @@
 import "./index.css";
 
 import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRoot } from "react-dom/client";
 
 import ActivityDemo from "./ActivityDemo.tsx";
@@ -20,5 +21,6 @@ const App = <ActivityDemo />;
 createRoot(rootElement).render(
   <QueryClientProvider client={queryClient}>
     <div className={"container mx-auto"}>{App}</div>
+    <ReactQueryDevtools />
   </QueryClientProvider>,
 );
