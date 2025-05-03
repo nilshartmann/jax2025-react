@@ -1,10 +1,11 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
-  startTransition,
   Suspense,
   unstable_ViewTransition as ViewTransition,
   useState,
 } from "react";
+
+const x = ViewTransition; // avoid cleaning from imports
 
 type TabName = "about" | "info" | "data";
 
@@ -12,9 +13,7 @@ export default function ViewTransitionDemo() {
   const [activeTab, setActiveTab] = useState<TabName | null>(null);
 
   const handleTabChange = (newTab: TabName) => {
-    startTransition(() => {
-      setActiveTab(newTab === activeTab ? null : newTab);
-    });
+    setActiveTab(newTab === activeTab ? null : newTab);
   };
 
   const btnClassName = (tab: string) =>
@@ -43,27 +42,14 @@ export default function ViewTransitionDemo() {
         </button>
       </div>
 
-      {activeTab === "info" && (
-        <ViewTransition>
-          <Announcement />
-        </ViewTransition>
-      )}
-      {activeTab === "about" && (
-        <ViewTransition>
-          <About />
-        </ViewTransition>
-      )}
+      {activeTab === null && <DemoHint />}
+
+      {activeTab === "info" && <Announcement />}
+      {activeTab === "about" && <About />}
+
       {activeTab === "data" && (
-        <Suspense
-          fallback={
-            <ViewTransition>
-              <Loading />
-            </ViewTransition>
-          }
-        >
-          <ViewTransition>
-            <DataComponent />
-          </ViewTransition>
+        <Suspense fallback={<Loading />}>
+          <DataComponent />
         </Suspense>
       )}
     </main>
@@ -98,7 +84,18 @@ function Loading() {
 }
 
 function DataComponent() {
-  useDemoSuspenseQuery(["data"], 1200);
+  useSuspenseQuery({
+    queryKey: ["data"],
+    staleTime: 0,
+    gcTime: 4000,
+    refetchOnMount: true,
+    queryFn() {
+      console.log("Simulating Suspense Query");
+      return new Promise((res) => {
+        setTimeout(() => res("huhu"), 1200);
+      });
+    },
+  });
 
   return (
     <div className={"border-4 border-blue-600 bg-blue-200 p-8"}>
@@ -108,17 +105,18 @@ function DataComponent() {
   );
 }
 
-function useDemoSuspenseQuery(keys: Array<string | number>, duration = 5000) {
-  return useSuspenseQuery({
-    queryKey: [keys],
-    staleTime: 0,
-    gcTime: 4000,
-    refetchOnMount: true,
-    queryFn() {
-      console.log("Simulating Suspense Query with keys  ", keys);
-      return new Promise((res) => {
-        setTimeout(() => res("huhu"), duration);
-      });
-    },
-  });
+function DemoHint() {
+  return (
+    <div className="RoseBox flex flex-col gap-y-8">
+      <h1>⚠️ Demo 👀</h1>
+      <ol className={"list-decimal"}>
+        <li>
+          Works only <b>in Chrome</b>
+        </li>
+        <li>
+          Show source code <b>About</b>, <b>Info</b> and <b>DataComponent</b>
+        </li>
+      </ol>
+    </div>
+  );
 }

@@ -3,6 +3,7 @@ import { createRouter as createTanstackRouter } from "@tanstack/react-router";
 
 import { routerWithQueryClient } from "@tanstack/react-router-with-query";
 import { routeTree } from "./routeTree.gen";
+import { enableSsr } from "@/demo-config.ts";
 
 export const createQueryClient = () => {
   return new QueryClient({
@@ -50,4 +51,4 @@ declare module "@tanstack/react-router" {
 }
 
 // Create a new router instance
-export const createRouter = createSsrRouter;
+export const createRouter = enableSsr ? createSsrRouter : createSpaRouter;

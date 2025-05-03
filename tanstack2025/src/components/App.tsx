@@ -13,7 +13,7 @@ export default function App() {
 
   useEffect(() => {
     async function loader() {
-      const response = await ky.get("http://localhost:7100/cards").json();
+      const response = await ky.get("http://localhost:7100/api/cards").json();
       const cardsFromServer = CardDtoList.parse(response);
       console.log("cardsFromServer", cardsFromServer);
       setCards(cardsFromServer);

@@ -30,6 +30,7 @@ export default [
       "src/routeTree.gen.ts",
       "vite.config.js",
       "public/hover-link.js",
+      "public/mockServiceWorker.js",
     ],
   },
 ];

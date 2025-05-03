@@ -8,7 +8,7 @@ export default function Card({ title, message, image }: CardProps) {
   return (
     <div className={"CardDisplay"}>
       <h2>{title}</h2>
-      <img src={`/images/${image}`} />
+      <img alt={title} src={`/images/${image}`} />
       <p>{message}</p>
     </div>
   );

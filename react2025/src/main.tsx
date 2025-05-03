@@ -16,7 +16,7 @@ if (rootElement === null) {
 
 const queryClient = createQueryClient();
 
-let demo = "fasdfasd";
+let demo = "activity";
 const App = demo === "activity" ? <ActivityDemo /> : <ViewTransitionDemo />;
 
 createRoot(rootElement).render(

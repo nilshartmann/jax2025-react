@@ -38,7 +38,7 @@ app.use((req, _res, next) => {
   }
 });
 
-app.get("/cards", (req, res) => {
+app.get("/api/cards", (req, res) => {
   let result = [...cards];
 
   const orderBy = req.query.orderBy || "date";
@@ -78,7 +78,7 @@ app.get("/cards", (req, res) => {
 const getCardById = (cardId) => cards.find((c) => c.id === cardId);
 
 // Return card with specified id (or 404)
-app.get("/cards/:id", (req, res) => {
+app.get("/api/cards/:id", (req, res) => {
   const card = getCardById(req.params.id);
 
   if (!card) {
@@ -88,7 +88,7 @@ app.get("/cards/:id", (req, res) => {
   return res.status(200).json(card);
 });
 
-app.get("/cards/:id/comments", (req, res) => {
+app.get("/api/cards/:id/comments", (req, res) => {
   const thisComments = comments.filter((c) => c.cardId === req.params.id);
 
   console.log("COMMENTS", thisComments);
@@ -96,7 +96,7 @@ app.get("/cards/:id/comments", (req, res) => {
   return res.status(200).json(thisComments);
 });
 
-app.post("/cards", (req, res) => {
+app.post("/api/cards", (req, res) => {
   const card = req.body;
   if (!card) {
     return res.status(400).json({ error: "Card must be defined" });
@@ -145,7 +145,7 @@ app.post("/cards", (req, res) => {
   res.status(201).json(newCard);
 });
 
-app.post("/cards/:id/likes", (req, res) => {
+app.post("/api/cards/:id/likes", (req, res) => {
   const card = getCardById(req.params.id);
 
   if (!card) {
@@ -169,6 +169,6 @@ const port = process.env.SERVER_PORT || 7100;
 app.listen(port, () => {
   console.log(`
     📞    Card API Server listening on port ${port}
-    👉    Try http://localhost:${port}/cards
+    👉    Try http://localhost:${port}/api/cards
 `);
 });

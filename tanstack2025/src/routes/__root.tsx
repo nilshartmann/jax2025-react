@@ -1,21 +1,18 @@
-import {
-  HeadContent,
-  Link,
-  Outlet,
-  Scripts,
-  createRootRouteWithContext,
-  redirect,
-} from "@tanstack/react-router";
-// import "../globals.css";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { createRootRouteWithContext, redirect } from "@tanstack/react-router";
+import "../globals.css";
 import globalsCss from "../globals.css?url";
 import type { QueryClient } from "@tanstack/react-query";
 import SpaRootComponent from "@/components/layout/SpaRootComponent.tsx";
+import { enableSsr } from "@/demo-config.ts";
 import SsrRootComponent from "@/components/layout/SsrRootComponent.tsx";
 
 interface MyRouterContext {
   queryClient: QueryClient;
 }
+
+const globalCssLink = enableSsr
+  ? [{ href: globalsCss, rel: "stylesheet" }]
+  : [];
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   loader: ({ location }) => {
@@ -42,7 +39,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
     ],
     links: [
-      { href: globalsCss, rel: "stylesheet" },
+      ...globalCssLink,
       { href: "/fonts/google-fonts.css", rel: "stylesheet" },
       { href: "/fonts/google-fonts.css", rel: "stylesheet" },
       { href: "/fontawesome/css/fontawesome.css", rel: "stylesheet" },
@@ -52,5 +49,5 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     ],
   }),
 
-  component: SsrRootComponent,
+  component: enableSsr ? SsrRootComponent : SpaRootComponent,
 });

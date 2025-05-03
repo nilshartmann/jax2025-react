@@ -11,9 +11,7 @@ export default function CommentList({ cardId }: CommentListProps) {
   return (
     <div className={"CommentList"}>
       <h1>Comments</h1>
-      <Suspense fallback={<LoadingIndicator />}>
-        <CommentListView cardId={cardId} />
-      </Suspense>
+      <CommentListView cardId={cardId} />
     </div>
   );
 }
@@ -29,4 +27,8 @@ function CommentListView({ cardId }: CommentListViewProps) {
       <h2>{c.text}</h2>
     </div>
   ));
+}
+
+function CommentLoadingIndicator() {
+  return <LoadingIndicator>Comments loading...</LoadingIndicator>;
 }

@@ -12,21 +12,8 @@ import { logger } from "./log.ts";
 // prevent Activity from beeing removed from imports when not used
 const x = Activity;
 
-// DEMO:
-
-//  - ohne Activity rendern:
-//    - initial: keine Daten werden geladen
-//    - Komponentenwechsel: Daten werden geladen. State geht verloren.
-//  - auf Activity umstellen:
-//    - initial: Daten werden vorgeladen
-//      - Lade dauer sehr langsam machen und hin- und her klicken
-//        - REquest läuft weiter
-//      - State in A bleibt erhalten
-//    - globalen Counter ändern:
-//      - visible Component wird gerendert + committed (effect)
-//      - hidden component wird nur gerendert (kein Effect)
-
 type TabName = "A" | "B";
+
 export default function ActivityDemo() {
   const [activeTab, setActiveTab] = useState<TabName | null>(null);
 
@@ -54,15 +41,10 @@ export default function ActivityDemo() {
 
       {activeTab === null && <DemoHint />}
 
-      <Activity mode={activeTab === "A" ? "visible" : "hidden"}>
-        <A />
-      </Activity>
+      {activeTab === "A" && <A />}
 
       <Suspense fallback={<LoadingFallback />}>
-        {/*{activeTab === "B" && <B />}*/}
-        <Activity mode={activeTab === "B" ? "visible" : "hidden"}>
-          <B />
-        </Activity>
+        {activeTab === "B" && <B />}
       </Suspense>
     </main>
   );
@@ -75,11 +57,7 @@ function A() {
   log("Rendering");
 
   useEffect(() => {
-    log("Effect Callback");
-
-    return () => {
-      log("Effect Clean-up");
-    };
+    log("useEffect executed");
   });
 
   return (
@@ -99,11 +77,7 @@ function B() {
   log("Rendering");
 
   useEffect(() => {
-    log("Effect Callback");
-
-    return () => {
-      log("Effect Clean-up");
-    };
+    log("useEffect executed");
   });
 
   const { data } = useSuspenseQuery({
@@ -127,18 +101,24 @@ function B() {
   );
 }
 
-function DemoHint() {
-  return (
-    <div className="RoseBox">
-      <h1>⚠️ Open console to see what's happening 👀</h1>
-    </div>
-  );
-}
-
 function LoadingFallback() {
   return (
     <div className="PurpleBox">
       <h1>Loading Data...</h1>
+    </div>
+  );
+}
+
+function DemoHint() {
+  return (
+    <div className="RoseBox flex flex-col gap-y-8">
+      <h1>⚠️ Demo 👀</h1>
+      <ol className={"list-decimal"}>
+        <li>
+          Show source code <b>Component A</b> and <b>Component B</b>
+        </li>
+        <li>Open console to see what (not) happens</li>
+      </ol>
     </div>
   );
 }

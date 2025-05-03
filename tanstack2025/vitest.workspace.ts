@@ -6,6 +6,7 @@ export default defineWorkspace([
   {
     extends: "vite.config.js",
     test: {
+      include: ["vitest-example/**/*.{test,spec}.ts*"],
       browser: {
         enabled: true,
         provider: "playwright",

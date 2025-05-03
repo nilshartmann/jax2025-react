@@ -25,7 +25,7 @@ export default function CardEditor({ onAfterSave }: CardEditorProps) {
     async mutationFn() {
       console.log("SAVING", title, message, selectedImage);
       const r = await ky
-        .post("http://localhost:7100/cards", {
+        .post("http://localhost:7100/api/cards", {
           json: { title, message, image: selectedImage },
         })
         .json();
