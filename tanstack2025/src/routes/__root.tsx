@@ -1,27 +1,49 @@
-import { QueryClient } from "@tanstack/react-query";
-import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
-import * as React from "react";
+import {
+  HeadContent,
+  Link,
+  Outlet,
+  Scripts,
+  createRootRouteWithContext,
+  redirect,
+} from "@tanstack/react-router";
+import "../globals.css";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import globalsCss from "../globals.css?url";
+import type { QueryClient } from "@tanstack/react-query";
+import SpaRootComponent from "@/components/layout/SpaRootComponent.tsx";
 
-import AppHeader from "./-components/AppHeader.tsx";
-
-type MatchTrackerRouterContext = {
+interface MyRouterContext {
   queryClient: QueryClient;
-};
-
-export const Route = createRootRouteWithContext<MatchTrackerRouterContext>()({
-  component: RootComponent,
-});
-
-function RootComponent() {
-  return (
-    <div className={"font-open-sans min-h-screen bg-stone-100"}>
-      <div className={"container mx-auto flex min-h-screen flex-col gap-y-4"}>
-        <AppHeader />
-        <main className={"flex-grow flex-col bg-white px-8 py-4"}>
-          <Outlet />
-        </main>
-        {/*<ReactQueryDevtools />*/}
-      </div>
-    </div>
-  );
 }
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
+  loader: ({ location }) => {
+    if (location.pathname === "/") {
+      throw redirect({ to: "/cards" });
+    }
+  },
+  head: () => ({
+    meta: [
+      {
+        charSet: "utf-8",
+      },
+      {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
+      },
+      {
+        title: "GreetingCards TanStack Demo",
+      },
+    ],
+    links: [
+      // { href: globalsCss, rel: "stylesheet" },
+      { href: "/fonts/google-fonts.css", rel: "stylesheet" },
+      { href: "/fontawesome/css/fontawesome.css", rel: "stylesheet" },
+      { href: "/fontawesome/css/brands.css", rel: "stylesheet" },
+      { href: "/fontawesome/css/regular.css", rel: "stylesheet" },
+      { href: "/fontawesome/css/solid.css", rel: "stylesheet" },
+    ],
+  }),
+
+  component: SpaRootComponent,
+});

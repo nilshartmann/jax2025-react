@@ -1,55 +1,44 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import ky from "ky";
+import { useEffect, useState } from "react";
 
-import { GetMyMatchDaysResponse } from "../types.ts";
-import MatchesByLeagueList from "./MatchesByLeagueList.tsx";
-import SettingsForm from "./SettingsForm.tsx";
+import { CardDto, CardDtoList } from "../types.ts";
+import Card from "./Card.tsx";
+
+// const title = "Happy Birthday!";
+// const image = "01.png";
+// const message = "I wish you a nice birthday!"
 
 export default function App() {
-  // Diese App-Komponente hier ist unser "Spielplatz",
-  // um die Komponenten auszuprobieren, die wir Schritt-für-Schritt
-  // entwickeln.
-  //
-  // Später werden wir sie gegen Router-basierte Komponenten
-  // austauschen.
+  const [cards, setCards] = useState<CardDto[]>([]);
 
-  // const sampleMatch: Match = {
-  //   id: "m1",
-  //   matchDay: "24. Spieltag",
-  //   homeTeam: "Hamburger SV",
-  //   awayTeam: "1. FC Nürnberg",
-  //   homeGoals: 3,
-  //   awayGoals: 2,
-  // };
-  //
-  // const sampleMatch2: Match = {
-  //   id: "m2",
-  //   matchDay: "24. Spieltag",
-  //   homeTeam: "1. FC Köln",
-  //   awayTeam: "MSV Duisburg",
-  //   homeGoals: 0,
-  //   awayGoals: 1,
-  // };
+  useEffect(() => {
+    async function loader() {
+      const response = await ky.get("http://localhost:7100/cards").json();
+      const cardsFromServer = CardDtoList.parse(response);
+      console.log("cardsFromServer", cardsFromServer);
+      setCards(cardsFromServer);
+    }
+    loader();
+  }, []);
 
-  // const matchesByLeague = generateDummyMatchItems(["bl1", "ucl24"], 9);
-
-  const { data } = useSuspenseQuery({
-    queryKey: ["users", "1", "my-matchdays"],
-    async queryFn() {
-      const response = await ky
-        .get("http://localhost:7100/api/users/1/my-matchdays?fail")
-        .json();
-
-      // Fehler auf der Konsole ansehen!
-
-      return GetMyMatchDaysResponse.parseAsync(response);
-    },
-  });
+  // Zod: Validating Data
 
   return (
-    <div className={"container mx-auto pt-8"}>
-      <MatchesByLeagueList matchesByLeagueList={data} />
-      <SettingsForm />
+    <div className={"container mx-auto"}>
+      {cards.map((c) => (
+        <Card key={c.id} title={c.title} message={c.message} image={c.image} />
+      ))}
+      {/*<CardEditor/>*/}
+      {/*<Card*/}
+      {/*  title="Happy Birthday!"*/}
+      {/*  image="01.png"*/}
+      {/*  message="I wish you a nice birthday!"*/}
+      {/*/>*/}
+      {/*  <Card*/}
+      {/*    title="Hello React"*/}
+      {/*    image="02.png"*/}
+      {/*    message="Have fun with React!"*/}
+      {/*  />*/}
     </div>
   );
 }
