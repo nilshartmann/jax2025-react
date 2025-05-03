@@ -1,12 +1,16 @@
-"use client";
-
 import ky from "ky";
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import { CardDto } from "@/types";
 import ImageChooser from "@/components/ImageChooser";
 import Card from "@/components/Card";
 
-export default function CardEditor() {
+type CardEditorProps = {
+  onAfterSave?(newCard: CardDto): void;
+};
+
+export default function CardEditor({ onAfterSave }: CardEditorProps) {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -16,16 +20,31 @@ export default function CardEditor() {
     setSelectedImage(newSelected);
   };
 
-  const handleSaveClick = async () => {
-    console.log("SAVING", title, message, selectedImage);
-    const r = await ky
-      .post("http://localhost:7100/cards", {
-        json: { title, message, image: selectedImage },
-      })
-      .json();
+  const queryClient = useQueryClient();
 
-    const x = CardDto.safeParse(r);
-    console.log(x);
+  const saveCardMutation = useMutation({
+    async mutationFn() {
+      console.log("SAVING", title, message, selectedImage);
+      const r = await ky
+        .post("http://localhost:7100/cards", {
+          json: { title, message, image: selectedImage },
+        })
+        .json();
+
+      return CardDto.parseAsync(r);
+    },
+    onSuccess() {
+      queryClient.refetchQueries({
+        queryKey: ["cards", "list"],
+      });
+    },
+  });
+
+  const handleSaveClick = async () => {
+    const newCard = await saveCardMutation.mutateAsync();
+    if (onAfterSave) {
+      onAfterSave(newCard);
+    }
   };
 
   return (
@@ -58,6 +77,17 @@ export default function CardEditor() {
         >
           Save
         </button>
+        {saveCardMutation.isSuccess && (
+          <p className={"flex justify-center gap-x-8 text-green-600"}>
+            <span className={"font-bold"}>New card saved!</span>
+            <Link to={"/cards"}>
+              <span className={"font-bold text-green-600"}>Home</span>
+            </Link>
+          </p>
+        )}
+        {saveCardMutation.isError && (
+          <p className={"text-rose-600"}>Card could not be created</p>
+        )}
       </form>
 
       {/*<Card*/}
