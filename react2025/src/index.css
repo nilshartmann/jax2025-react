@@ -130,6 +130,30 @@
   .MultiSelect__Option {
     @apply flex items-center justify-between space-x-2 border-b border-b-gray-200 pb-4;
   }
+
+  main {
+    @apply container mx-auto flex flex-col gap-y-4;
+  }
+
+  .ButtonBar {
+    @apply flex justify-center space-x-4 p-2;
+  }
+
+  .RoseBox {
+    @apply flex items-center justify-center gap-x-8 rounded-xl border-2 border-rose-600 bg-rose-200 p-8 tracking-wide text-rose-600;
+  }
+
+  .PurpleBox {
+    @apply flex items-center gap-x-8 rounded-xl border-2 border-purple-600 bg-purple-200 p-8;
+  }
+
+  .BlueBox {
+    @apply flex items-center gap-x-8 rounded-xl border-2 border-blue-600 bg-blue-200 p-8;
+  }
+
+  .TealBox {
+    @apply flex items-center gap-x-8 rounded-xl border-2 border-teal-600 bg-teal-200 p-8;
+  }
 }
 
 /* Spinner CSS taken from: http://tobiasahlin.com/spinkit/ */

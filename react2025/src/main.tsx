@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client";
 
 import ActivityDemo from "./ActivityDemo.tsx";
 import { createQueryClient } from "./create-query-client.ts";
+import ViewTransitionDemo from "./ViewTransitionsDemo.tsx";
 
 const rootElement = document.getElementById("root");
 
@@ -15,8 +16,8 @@ if (rootElement === null) {
 
 const queryClient = createQueryClient();
 
-const App = <ActivityDemo />;
-// const App = <ViewTransitionDemo />;
+let demo = "fasdfasd";
+const App = demo === "activity" ? <ActivityDemo /> : <ViewTransitionDemo />;
 
 createRoot(rootElement).render(
   <QueryClientProvider client={queryClient}>

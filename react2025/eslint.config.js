@@ -43,6 +43,7 @@ export default tseslint.config(
         "off",
         { allowConstantExport: true },
       ],
+      "prefer-const": "off",
       "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-explicit-any": "off",

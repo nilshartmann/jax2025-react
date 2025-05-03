@@ -1,10 +1,13 @@
-import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   Suspense,
   unstable_Activity as Activity,
   useEffect,
   useState,
 } from "react";
+
+import { dummyFetch } from "./dummy-fetch.ts";
+import { logger } from "./log.ts";
 
 // prevent Activity from beeing removed from imports when not used
 const x = Activity;
@@ -27,22 +30,20 @@ type TabName = "A" | "B";
 export default function ActivityDemo() {
   const [activeTab, setActiveTab] = useState<TabName | null>(null);
 
-  // Changing the global counter reveals that all children
-  // are re-rendered (even the "hidden" ones)
-  const [counterApp, setCounterApp] = useState(0);
+  const [counter, setCounter] = useState(0);
+
+  const increaseCounter = () => setCounter((c) => c + 1);
 
   const btnClassName = (tab: string) =>
     activeTab === tab ? "active" : undefined;
 
-  const queryClient = useQueryClient();
-
   return (
-    <div className={"container mx-auto flex flex-col space-y-8"}>
-      <button onClick={() => setCounterApp((c) => c + 1)}>
-        Local Counter: {counterApp} increase
+    <main>
+      <button onClick={increaseCounter}>
+        Local Counter: {counter} increase
       </button>
 
-      <div className={"flex justify-center space-x-4 border-gray-300 p-2"}>
+      <div className={"ButtonBar"}>
         <button className={btnClassName("A")} onClick={() => setActiveTab("A")}>
           A (simple component with local State)
         </button>
@@ -63,46 +64,27 @@ export default function ActivityDemo() {
           <B />
         </Activity>
       </Suspense>
-    </div>
-  );
-}
-
-function DemoHint() {
-  return (
-    <div className="flex items-center justify-center gap-x-8 rounded-xl border-2 border-rose-600 bg-rose-200 p-8 tracking-wide text-rose-600">
-      <h1>⚠️ Open console to see what's happening 👀</h1>
-    </div>
-  );
-}
-
-function LoadingFallback() {
-  return (
-    <div className="flex items-center gap-x-8 rounded-xl border-2 border-purple-600 bg-purple-200 p-8">
-      <h1>Loading Data...</h1>
-    </div>
+    </main>
   );
 }
 
 function A() {
+  const log = logger("Component A");
   const [counterA, setCounterA] = useState(0);
 
-  console.log("Render A", new Date().toLocaleTimeString());
+  log("Rendering");
 
   useEffect(() => {
-    console.log("Effect A");
+    log("Effect Callback");
 
     return () => {
-      console.log("Clean-up Effect A");
+      log("Effect Clean-up");
     };
   });
 
   return (
-    <div
-      className={
-        "flex items-center gap-x-8 rounded-xl border-2 border-blue-600 bg-blue-200 p-8"
-      }
-    >
-      <div className={"font-bold"}>Component A</div>
+    <div className={"BlueBox"}>
+      <h1>Component A</h1>
       <button onClick={() => setCounterA(counterA + 1)}>
         Local Counter in A: {counterA}
       </button>
@@ -111,42 +93,52 @@ function A() {
 }
 
 function B() {
+  const log = logger("Component B");
   const [counterB, setCounterB] = useState(0);
 
-  console.log("Render B", new Date().toLocaleTimeString());
+  log("Rendering");
 
   useEffect(() => {
-    console.log("Effect B");
+    log("Effect Callback");
 
     return () => {
-      console.log("Clean-up Effect B");
+      log("Effect Clean-up");
     };
   });
 
   const { data } = useSuspenseQuery({
     queryKey: ["B"],
-    queryFn(): Promise<string> {
-      console.log("Fetching Data in Suspense Query");
-      return new Promise((res) => {
-        setTimeout(() => {
-          console.log("Data Fetched in Suspense Query");
-          res(`This is dummy data loaded with suspense`);
-        }, 4200);
-      });
+    async queryFn() {
+      log("Fetching Data in Suspense Query");
+      const result = await dummyFetch(4200);
+      log("Fetching Data in Suspense Query ... DONE");
+      return result;
     },
   });
 
   return (
-    <div
-      className={
-        "flex items-center gap-x-8 rounded-xl border-2 border-teal-600 bg-teal-200 p-8"
-      }
-    >
-      <div className={"font-bold"}>Component B</div>
+    <div className={"TealBox"}>
+      <h1>Component B</h1>
       <div>{data}</div>
       <button id="buttonB" onClick={() => setCounterB(counterB + 1)}>
         Local Couter in B: {counterB}
       </button>
+    </div>
+  );
+}
+
+function DemoHint() {
+  return (
+    <div className="RoseBox">
+      <h1>⚠️ Open console to see what's happening 👀</h1>
+    </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="PurpleBox">
+      <h1>Loading Data...</h1>
     </div>
   );
 }

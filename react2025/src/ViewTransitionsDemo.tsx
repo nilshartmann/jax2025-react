@@ -21,8 +21,8 @@ export default function ViewTransitionDemo() {
     activeTab === tab ? "active" : undefined;
 
   return (
-    <div className={"flex flex-col gap-y-4"}>
-      <div className={"flex space-x-4 border-gray-300 p-2"}>
+    <main>
+      <div className={"ButtonBar"}>
         <button
           className={btnClassName("about")}
           onClick={() => handleTabChange("about")}
@@ -66,7 +66,7 @@ export default function ViewTransitionDemo() {
           </ViewTransition>
         </Suspense>
       )}
-    </div>
+    </main>
   );
 }
 
