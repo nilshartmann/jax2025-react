@@ -41,10 +41,14 @@ export default function ActivityDemo() {
 
       {activeTab === null && <DemoHint />}
 
-      {activeTab === "A" && <A />}
+      <Activity mode={activeTab === "A" ? "visible" : "hidden"}>
+        <A />
+      </Activity>
 
       <Suspense fallback={<LoadingFallback />}>
-        {activeTab === "B" && <B />}
+        <Activity mode={activeTab === "B" ? "visible" : "hidden"}>
+          <B />
+        </Activity>
       </Suspense>
     </main>
   );
