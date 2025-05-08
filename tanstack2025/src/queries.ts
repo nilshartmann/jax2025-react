@@ -26,7 +26,7 @@ export const fetchCommentsOpts = (cardId: string) =>
     queryKey: ["cards", "detail", cardId, "comments"],
     async queryFn() {
       const r = await ky
-        .get(`http://localhost:7100/api/cards/${cardId}/comments`)
+        .get(`http://localhost:7100/api/cards/${cardId}/comments?slow=1200`)
         .json();
       return CommentDtoList.parse(r);
     },
