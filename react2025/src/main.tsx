@@ -1,7 +1,6 @@
 import "./index.css";
 
 import { QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRoot } from "react-dom/client";
 
 import ActivityDemo from "./ActivityDemo.tsx";
@@ -16,12 +15,12 @@ if (rootElement === null) {
 
 const queryClient = createQueryClient();
 
-let demo = "activity";
+let demo = "fasdfasd";
 const App = demo === "activity" ? <ActivityDemo /> : <ViewTransitionDemo />;
 
 createRoot(rootElement).render(
   <QueryClientProvider client={queryClient}>
     <div className={"container mx-auto"}>{App}</div>
-    <ReactQueryDevtools />
+    {/*<ReactQueryDevtools />*/}
   </QueryClientProvider>,
 );

@@ -15,7 +15,7 @@ export default function CardDetail({ card }: CardDetailProps) {
     >
       <Card {...card} />
 
-      {/*<CommentList cardId={card.id} />*/}
+      <CommentList cardId={card.id} />
     </div>
   );
 }

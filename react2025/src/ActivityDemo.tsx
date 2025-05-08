@@ -41,10 +41,16 @@ export default function ActivityDemo() {
 
       {activeTab === null && <DemoHint />}
 
-      {activeTab === "A" && <A />}
+      <Activity mode={activeTab === "A" ? "visible" : "hidden"}>
+        <A />
+      </Activity>
+
+      {/*{activeTab === "A" && <A />}*/}
 
       <Suspense fallback={<LoadingFallback />}>
-        {activeTab === "B" && <B />}
+        <Activity mode={activeTab === "B" ? "visible" : "hidden"}>
+          <B />
+        </Activity>
       </Suspense>
     </main>
   );
@@ -93,6 +99,7 @@ function B() {
   return (
     <div className={"TealBox"}>
       <h1>Component B</h1>
+      <title>Hallo Komponente B</title>
       <div>{data}</div>
       <button id="buttonB" onClick={() => setCounterB(counterB + 1)}>
         Local Couter in B: {counterB}

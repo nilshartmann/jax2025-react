@@ -1,5 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
+  startTransition,
   Suspense,
   unstable_ViewTransition as ViewTransition,
   useState,
@@ -13,7 +14,9 @@ export default function ViewTransitionDemo() {
   const [activeTab, setActiveTab] = useState<TabName | null>(null);
 
   const handleTabChange = (newTab: TabName) => {
-    setActiveTab(newTab === activeTab ? null : newTab);
+    startTransition(() => {
+      setActiveTab(newTab === activeTab ? null : newTab);
+    });
   };
 
   const btnClassName = (tab: string) =>
@@ -44,8 +47,16 @@ export default function ViewTransitionDemo() {
 
       {activeTab === null && <DemoHint />}
 
-      {activeTab === "info" && <Announcement />}
-      {activeTab === "about" && <About />}
+      {activeTab === "info" && (
+        <ViewTransition>
+          <Announcement />
+        </ViewTransition>
+      )}
+      {activeTab === "about" && (
+        <ViewTransition>
+          <About />
+        </ViewTransition>
+      )}
 
       {activeTab === "data" && (
         <Suspense fallback={<Loading />}>
