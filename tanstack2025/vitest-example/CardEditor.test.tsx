@@ -29,7 +29,7 @@ test("creates and saves new card", async () => {
   await screen.getByAltText(/01/).click();
   await expect.element(saveButton).toBeEnabled();
 
-  // SAVE FUNKTIONIERT (NOCH) NICHT, WEIL API-BACKEND NICHT LÄUFT
+  // POST-Request wird von MSW "beantwortet"
   await saveButton.click();
   await expect.element(screen.getByText(/New card saved/i)).toBeInTheDocument();
 });
